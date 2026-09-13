@@ -9,7 +9,7 @@ Top 8 and Top 16 — built against
 ## Web app (`web/`)
 
 A static, client-only page — no build step, no backend; nothing leaves the
-browser. Fill in the event, pick the cut, enter each player's record, CP and
+browser. Fill in the event, pick the cut, enter each player's record, points and
 team, and download the PNG.
 
 - **Teams** — type species with autocomplete, or **Paste team** from a
@@ -19,8 +19,8 @@ team, and download the PNG.
   **@2x** rasterise the same markup through an SVG `foreignObject`, so the
   export matches the preview. On phones that support it, **Share** hands the
   PNG to the share sheet.
-- **Warnings** list species not in the regulation, missing names, and any name
-  the ellipsis cut (measured in the preview, not estimated).
+- **Warnings** list species not in the regulation and missing names. Event and
+  player names always show whole (see *Fitted names* below).
 - **Import / Export JSON** uses the same shape as `data/*.json`, so an event
   saved from the page renders with `node src/card.mjs --data`.
 - The event autosaves to `localStorage`.
@@ -74,21 +74,34 @@ no disclaimer — by decision.
 
 | Preset | Canvas | Places 1–4 | Places 5+ |
 |---|---|---|---|
-| `square-4` | 1080×1080 | 215px band, 127px icons | — |
-| `portrait-8` | 1080×1350 | 180px band, 92px icons | 92px row, 59px icons |
-| `story-16` | 1080×1920 | 167px band, 79px icons | 76px row, 52px icons |
+| `square-4` | 1080×1080 | 215px band, 119px icons | — |
+| `portrait-8` | 1080×1350 | 180px band, 84px icons | 92px row, 59px icons |
+| `story-16` | 1080×1920 | 167px band, 71px icons | 76px row, 52px icons |
 
-Places 1–4 get the full two-line band: a 60px bar (record 48px, name 30px)
-with the team on its own line beneath. Places 5+ get a one-line band: place,
-name, team and record-over-CP inside the bar. Sixteen full bands would leave
-~30px icons, under the 44px Mega-legibility floor. Place and name columns are
-shared by both kinds and CP ends at the bar's edge, so it still scans as a
-table. The tone ramp runs across the whole stack.
+Places 1–4 get the full two-line band: a 68px bar (name up to 30px, record
+40px over points 21px) with the team on its own line beneath. Places 5+ get a
+one-line band: place, name and team inside the bar (name up to 22px, record
+34px over points 18px). Sixteen full bands would leave ~30px icons, under the
+44px Mega-legibility floor. Every bar ends in the same arrangement — record on
+top, "N Pts" below, flush to the bar's edge on a width reserved for
+"12-10" / "999 Pts" — and the place and name columns are shared, so the card
+scans as a table. The tone ramp runs across the whole stack. (The data field
+is still `cp`, and `showCp` hides the points line.)
+
+**Fitted names.** The event name and each player name are shown whole: each is
+measured at its full size and, if it overflows its column, drawn at the
+largest size that fits. There is no minimum, so an extremely long name gets
+very small rather than cut. Measuring needs a layout engine, so `web/card.js`
+takes a `measure` function and bakes the sizes into the markup: the web app
+measures against its own DOM once the card fonts load; `src/card.mjs` builds
+each card once to collect the strings, measures them in headless Chrome, then
+builds it for real. Both give identical sizes.
 
 `src/card.mjs` reads `data/sample-large.json` (16 players, large-event
 records) by default, building the card with `web/card.js` from the assets in
 `web/`. The HTML inlines sprites and fonts, so it is self-contained. After
-rendering, the page is loaded again to **report any name the ellipsis cut**.
+rendering, the page is loaded again to **report any name or title still cut
+off** — fitting should leave that empty.
 
 `render.mjs` still produces the original table design for its presets; the
 `gallery` / `bigicons` / `colorvariants` / `finalists` / `sliced` / `bars` /

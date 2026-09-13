@@ -5,7 +5,7 @@
  * it, and export.js rasterises it to PNG. State lives in localStorage.
  */
 
-import { PRESETS, presetForCut, buildCard, cardDocument, esc } from "./card.js";
+import { PRESETS, presetForCut, buildCard, cardDocument, domMeasurer, esc } from "./card.js";
 import { cardToPng } from "./export.js";
 
 const STORE = "champions-standings:v1";
@@ -27,6 +27,13 @@ const uiFaces = document.createElement("style");
 uiFaces.textContent = fonts.map(f => `@font-face{font-family:'${f.family}';font-weight:${f.weight};` +
   `font-display:swap;src:url(${f.file}) format('woff2')}`).join("\n");
 document.head.append(uiFaces);
+
+/* Names are fitted to their columns by measuring them against this page's
+   layout, so the card's faces must be loaded first — a fallback face would
+   give the wrong widths. */
+await Promise.all([...new Set(fonts.map(f => `${f.weight} 16px '${f.family}'`))]
+  .map(f => document.fonts.load(f)));
+const measure = domMeasurer(document);
 
 /* Export needs every asset inline, so everything the card uses is fetched
    once and kept as a data: URI. */
@@ -55,7 +62,7 @@ async function envFor(data, cut) {
   ]);
   const sprites = Object.fromEntries(slugs.map((s, i) => [s, spriteUris[i]]));
   return {
-    roster, css: cardCss,
+    roster, css: cardCss, measure,
     fonts: fonts.map((f, i) => ({ ...f, url: fontUris[i] })),
     sprite: s => sprites[s], filler: fillerUri,
   };
@@ -164,7 +171,7 @@ function renderForm() {
         <div class="player__row">
           <label class="field">Player<input data-p="${i}" data-f="name" value="${esc(p.name)}" autocomplete="off"></label>
           <label class="field">Record<input data-p="${i}" data-f="record" value="${esc(p.record)}" placeholder="7-2" autocomplete="off"></label>
-          <label class="field">CP<input data-p="${i}" data-f="cp" value="${esc(p.cp)}" inputmode="numeric" autocomplete="off"></label>
+          <label class="field">Pts<input data-p="${i}" data-f="cp" value="${esc(p.cp)}" inputmode="numeric" autocomplete="off"></label>
           <button type="button" class="btn btn--small" data-paste="${i}">Paste team</button>
         </div>
         <div class="team-inputs">${p.team.map((v, j) => monHtml(i, j, v)).join("")}</div>
@@ -304,7 +311,7 @@ function warn(truncated) {
     const bad = p.team.filter(v => v && !roster[v]);
     if (bad.length) items.push(`<b>${where}</b>: not in Regulation ${esc(rosterFile.regulation)} — ${bad.map(esc).join(", ")} (shown as a blank slot)`);
   });
-  for (const n of truncated) items.push(`<b>${esc(n)}</b> is too long and is cut off with “…”`);
+  for (const n of truncated) items.push(`<b>${esc(n)}</b> didn't fit and is cut off with “…”`);
   $("#warnings").innerHTML = items.map(t => `<li>${t}</li>`).join("");
 }
 
@@ -322,8 +329,10 @@ async function renderPreview() {
     const doc = frame.contentDocument;
     await doc.fonts.ready;
     if (mine !== seq) return;
-    const cutNames = [...doc.querySelectorAll(".nm")]
+    const cutNames = [...doc.querySelectorAll(".nm, .title")]
       .filter(e => e.scrollWidth > e.clientWidth + 1).map(e => e.textContent);
+    /* Names are shrunk to fit, so this should stay empty — it reports the
+       rare case where measuring and painting disagree. */
     warn(cutNames);
   };
   frame.srcdoc = cardDocument(card);
