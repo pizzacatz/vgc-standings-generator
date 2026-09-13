@@ -1,0 +1,87 @@
+/* Brand tone → team type bands, no footer. Geometry constants arrive from
+   brandtype.mjs as :root custom properties. */
+
+:root{
+  --page:#0d0d0d; --rule:#8a6f42; --name:#f8efe5; --meta:#cfc4ba;
+  --advance:#ffb072; --plate:#101010;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:var(--name);font-family:Inter,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+/* ── Gallery ─────────────────────────────────────────────────────────── */
+.page{padding:48px 40px 4px;max-width:1780px;margin:0 auto}
+.page h1{font:800 34px/1.1 Montserrat,Inter,sans-serif;letter-spacing:-.02em}
+.page p{margin-top:10px;color:var(--meta);font:500 15px/1.55 Inter;max-width:104ch}
+.page b{color:var(--name);font-weight:700}
+.page code{font:600 13px/1 ui-monospace,monospace;color:var(--advance)}
+.page .warn{border-left:3px solid var(--advance);padding-left:14px;margin-top:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,430px);justify-content:center;
+  gap:42px 34px;padding:28px 40px 80px;max-width:1780px;margin:0 auto}
+.demo figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;margin-bottom:12px;
+  min-height:100px;align-content:start}
+.demo__n{font:800 13px/1 Inter;color:var(--advance);letter-spacing:.08em}
+.demo__title{font:700 17px/1.2 Inter;letter-spacing:-.01em}
+.demo__tag{font:700 10px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 7px;border-radius:5px;color:#1a1a1a}
+.demo__tag--control{background:#cfc4ba}
+.demo__tag--requested{background:#7fd4d4}
+.demo__icon{font:700 11px/1 Inter;color:var(--meta)}
+.demo__note{flex:0 0 100%;color:var(--meta);font:500 13px/1.45 Inter}
+.frame{width:430px;height:430px;overflow:hidden;border-radius:10px;
+  border:1px solid #222;background:var(--page)}
+.frame .card{transform-origin:0 0;transform:scale(0.398148)}
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.card{position:relative;width:1080px;height:1080px;padding:var(--pad);
+  background:var(--page);display:flex;flex-direction:column;overflow:hidden}
+
+.head{flex:none;height:var(--head)}
+.head__row{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.title{font:800 var(--title-fs)/1.05 Montserrat,Inter,sans-serif;letter-spacing:-.02em}
+.cut{font:800 26px/1 Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--advance)}
+.sub{margin-top:var(--title-gap);font:600 var(--sub-fs)/1.3 Inter;color:var(--meta)}
+
+/* The stack is now the entire body — nothing below it but the card's margin. */
+.stack{flex:none;height:var(--stack-h);width:var(--stack-w);margin:0 var(--inset);
+  display:flex;flex-direction:column;gap:var(--gap)}
+
+.blk{position:relative;height:var(--band);transform:skewX(calc(var(--shear) * -1));
+  border-radius:5px;overflow:hidden;
+  /* brand tone at the leading edge, the team's dominant type across the rest */
+  background-image:linear-gradient(100deg,var(--tone) 0%,var(--type) 100%)}
+.inner{height:100%;transform:skewX(var(--shear));
+  padding:var(--vpad) var(--slope);display:flex;flex-direction:column;gap:var(--rowgap)}
+
+/* ── Bar ─────────────────────────────────────────────────────────────── */
+.strip{flex:none;height:var(--strip)}
+.tab{display:block;height:100%;background:var(--plate);border-radius:4px}
+.tabin{display:flex;align-items:center;gap:14px;height:100%;padding:0 16px}
+.spacer{flex:1}
+
+.K-ghost .tab{background:rgb(16 16 16 / .72)}
+
+.pl{flex:none;font:800 var(--pl-fs)/1 Inter;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;color:var(--advance)}
+.pl sup{font-size:.46em;font-weight:700;vertical-align:baseline}
+.nm{flex:none;font:700 var(--nm-fs)/1 Inter;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--name);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px}
+
+/* Reserved widths scale with the type, so 8-5 / 8 CP still sit under
+   12-1 / 128 CP — and would still sit under 12-10 / 999 CP. */
+.rec{flex:none;min-width:var(--rec-min);text-align:right;color:var(--name);
+  font:800 var(--rec-fs)/1 Inter;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.cp{flex:none;min-width:var(--cp-min);text-align:right;color:var(--meta);
+  font:700 var(--cp-fs)/1 Inter;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+
+/* ── Icons ───────────────────────────────────────────────────────────── */
+.team{flex:1;display:flex;align-items:center;justify-content:center;gap:var(--icon-gap)}
+.pk{width:var(--icon);height:var(--icon);flex:none;background-size:contain;
+  background-repeat:no-repeat;background-position:center}
+.pk--empty{background:rgb(13 13 13/.5);
+  -webkit-mask-image:var(--mask);mask-image:var(--mask);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center}
+
+.blk--champ .nm{font-weight:800}

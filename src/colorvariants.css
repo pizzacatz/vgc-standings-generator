@@ -1,0 +1,243 @@
+/* Colour variants of 06 (shear) and 12 (slot). Per-block colours arrive as
+   inline custom properties: --med / --med-ink / --sig / --ta / --tb / --neon. */
+
+:root{
+  --page:#0d0d0d; --node:#1a1a1a; --raise:#242424; --rule:#8a6f42;
+  --name:#f8efe5; --meta:#cfc4ba; --advance:#ffb072; --ink:#1a1a1a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:var(--name);font-family:Inter,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+/* ── Gallery ─────────────────────────────────────────────────────────── */
+.page{padding:48px 40px 8px;max-width:1780px;margin:0 auto}
+.page h1{font:800 34px/1.1 Montserrat,Inter,sans-serif;letter-spacing:-.02em}
+.page p{margin-top:10px;color:var(--meta);font:500 15px/1.55 Inter;max-width:100ch}
+.page b{color:var(--name);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,400px);justify-content:center;
+  gap:44px 34px;padding:32px 40px 80px;max-width:1780px;margin:0 auto}
+.demo figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:7px;margin-bottom:12px;
+  min-height:110px;align-content:start}
+.demo__n{font:800 13px/1 Inter;color:var(--advance);letter-spacing:.08em}
+.demo__title{font:700 17px/1.2 Inter;letter-spacing:-.01em}
+.demo__fam{font:700 10px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 7px;border-radius:5px;color:#1a1a1a}
+.demo__fam--shear{background:#7fd4d4}
+.demo__fam--slot{background:#f094c6}
+.demo__sys{font:700 10px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 7px;border-radius:5px;border:1px solid currentColor}
+.demo__sys--medal{color:#ffcf4d}.demo__sys--type{color:#6fc25a}.demo__sys--neon{color:#ff4fa3}
+.demo__icon{font:700 11px/1 Inter;color:var(--meta)}
+.demo__note{flex:0 0 100%;color:var(--meta);font:500 13px/1.45 Inter}
+.frame{width:400px;height:400px;overflow:hidden;border-radius:10px;
+  border:1px solid #222;background:var(--page)}
+.frame .card{transform-origin:0 0;transform:scale(0.37037)}
+
+/* ── Shared card ─────────────────────────────────────────────────────── */
+.card{position:relative;width:1080px;height:1080px;padding:38px 44px 32px;
+  background:var(--page);display:flex;flex-direction:column;overflow:hidden}
+.card>*{position:relative;z-index:1}
+
+.head{flex:none;margin-bottom:18px}
+.head__row{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
+.title{font:800 38px/1.05 Montserrat,Inter,sans-serif;letter-spacing:-.02em}
+.cut{font:800 23px/1 Inter;letter-spacing:.06em;text-transform:uppercase;color:var(--advance)}
+.sub{margin-top:8px;font:600 16px/1.3 Inter;color:var(--meta)}
+
+.stack{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-height:0}
+.blk{display:flex;flex-direction:column;gap:6px}
+
+.lab{display:flex;align-items:center;gap:11px;min-height:28px}
+.pl{flex:none;font:800 25px/1 Inter;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  color:var(--advance)}
+.pl sup{font-size:12px;font-weight:700;vertical-align:baseline}
+.nm{flex:none;font:700 23px/1 Inter;letter-spacing:.05em;text-transform:uppercase;color:var(--name);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
+.lab .rule{flex:1;height:1px;background:var(--rule);min-width:12px}
+.rc{flex:none;font:700 20px/1 Inter;font-variant-numeric:tabular-nums;color:var(--meta)}
+
+.chips{flex:none;display:flex;gap:5px}
+.chip{font:800 11px/1 Inter;letter-spacing:.1em;text-transform:uppercase;color:#1a1a1a;
+  background:var(--t);padding:4px 7px;border-radius:4px}
+
+.team{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.pk{width:var(--icon);height:var(--icon);flex:none;background-size:contain;
+  background-repeat:no-repeat;background-position:center}
+.pk--empty{background:var(--rule);opacity:.5;
+  -webkit-mask-image:var(--mask);mask-image:var(--mask);-webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center}
+
+/* type plate / underline carriers */
+.plate{display:grid;place-items:center;background:var(--t);border-radius:9px;padding:5px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:5px}
+.tstrip{width:70%;height:6px;background:var(--t);border-radius:3px}
+
+.foot{flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+  border-top:1px solid var(--rule);padding-top:10px;margin-top:12px}
+.mark{font:800 14px/1 Montserrat,Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.mark span{color:var(--advance)}
+.disclaim{font:500 10px/1.35 Inter;color:var(--meta);text-align:right;max-width:58%}
+
+/* ═══════════════ SHEAR FAMILY ═══════════════ */
+[class*="C-sh-"] .stack{gap:8px}
+[class*="C-sh-"] .blk{transform:skewX(-9deg);border-radius:4px;padding:9px 16px}
+[class*="C-sh-"] .blk:nth-child(2){margin-left:20px}
+[class*="C-sh-"] .blk:nth-child(3){margin-left:40px}
+[class*="C-sh-"] .blk:nth-child(4){margin-left:60px}
+[class*="C-sh-"] .lab,[class*="C-sh-"] .team{transform:skewX(9deg)}
+
+/* 01 medal bands — solid placement fill, dark content */
+.C-sh-medal .blk{background:var(--med)}
+.C-sh-medal .pl,.C-sh-medal .nm{color:var(--med-ink)}
+.C-sh-medal .rc{color:rgb(26 26 26/.72)}
+.C-sh-medal .lab .rule{background:rgb(26 26 26/.34)}
+
+/* 02 team-type bands */
+.C-sh-type .blk{background:linear-gradient(100deg,var(--sig),rgb(13 13 13/.9) 78%);
+  border:1px solid var(--sig)}
+.C-sh-type .pl{color:#1a1a1a}
+.C-sh-type .nm{color:#1a1a1a}
+.C-sh-type .rc{color:var(--name)}
+.C-sh-type .lab .rule{background:rgb(255 255 255/.25)}
+.C-sh-type .lab{gap:10px}
+
+/* 03 neon rails */
+.C-sh-neon .blk{background:#131313;border-left:16px solid var(--neon);
+  box-shadow:0 0 26px -6px var(--neon),inset 0 0 0 1px rgb(255 255 255/.07)}
+.C-sh-neon .pl{color:var(--neon)}
+.C-sh-neon .nm{color:#fff}
+.C-sh-neon .lab .rule{background:var(--neon);opacity:.45}
+.C-sh-neon .rc{color:var(--neon)}
+
+/* 04 split bands */
+.C-sh-split .blk{flex:1;flex-direction:row;align-items:stretch;gap:0;padding:0;background:#131313;
+  border:1px solid var(--med);overflow:hidden}
+.C-sh-split .lab{flex:none;width:240px;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:5px;padding:10px 16px;background:var(--med)}
+.C-sh-split .pl{font-size:40px;color:var(--med-ink)}
+.C-sh-split .nm{font-size:16px;color:var(--med-ink);max-width:206px;white-space:normal;line-height:1.15}
+.C-sh-split .lab .rule{display:none}
+.C-sh-split .rc{font-size:16px;color:rgb(26 26 26/.72)}
+.C-sh-split .team{flex:1;padding:8px 14px;align-items:center}
+
+/* 05 reverse shear */
+[class*="C-sh-reverse"] .blk{transform:skewX(10deg)}
+[class*="C-sh-reverse"] .lab,[class*="C-sh-reverse"] .team{transform:skewX(-10deg)}
+.C-sh-reverse .blk:nth-child(2){margin-left:0;margin-right:20px}
+.C-sh-reverse .blk:nth-child(3){margin-left:0;margin-right:40px}
+.C-sh-reverse .blk:nth-child(4){margin-left:0;margin-right:60px}
+.C-sh-reverse .blk:nth-child(odd){background:var(--med)}
+.C-sh-reverse .blk:nth-child(odd) .pl,.C-sh-reverse .blk:nth-child(odd) .nm{color:var(--med-ink)}
+.C-sh-reverse .blk:nth-child(odd) .rc{color:rgb(26 26 26/.72)}
+.C-sh-reverse .blk:nth-child(odd) .rule{background:rgb(26 26 26/.34)}
+.C-sh-reverse .blk:nth-child(even){background:#131313;border:2px solid var(--med)}
+.C-sh-reverse .blk:nth-child(even) .pl{color:var(--med)}
+
+/* 06 type plates — a colour per Pokémon */
+.C-sh-plates .blk{background:#141414;border:1px solid rgb(255 255 255/.10)}
+.C-sh-plates .pl{color:var(--sig)}
+.C-sh-plates .lab .rule{background:rgb(255 255 255/.16)}
+.C-sh-plates .team{gap:7px}
+
+/* 07 numeral plates */
+.C-sh-numplate .blk{flex-direction:row;align-items:stretch;gap:14px;padding:0;background:#131313;
+  border:1px solid rgb(255 255 255/.10);overflow:hidden}
+.C-sh-numplate .lab{flex:none;width:150px;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px;background:var(--med);padding:6px}
+.C-sh-numplate .pl{font:800 62px/1 Montserrat,Inter,sans-serif;color:var(--med-ink)}
+.C-sh-numplate .pl sup{display:none}
+.C-sh-numplate .nm{font-size:13px;letter-spacing:.08em;color:rgb(26 26 26/.82);max-width:134px;
+  white-space:normal;text-align:center;line-height:1.15}
+.C-sh-numplate .lab .rule{display:none}
+.C-sh-numplate .rc{font-size:14px;color:rgb(26 26 26/.72)}
+.C-sh-numplate .team{flex:1;padding:8px 16px 8px 0}
+
+/* 08 ribbon stack */
+.C-sh-ribbon .blk{background:none;padding:0;gap:5px}
+.C-sh-ribbon .lab{background:var(--med);padding:5px 14px;border-radius:3px;align-self:flex-start;
+  min-height:0;max-width:74%}
+.C-sh-ribbon .pl,.C-sh-ribbon .nm{color:var(--med-ink)}
+.C-sh-ribbon .nm{font-size:19px}
+.C-sh-ribbon .lab .rule{background:rgb(26 26 26/.3);min-width:26px}
+.C-sh-ribbon .rc{color:rgb(26 26 26/.74);font-size:17px}
+.C-sh-ribbon .team{background:#141414;border-left:8px solid var(--med);padding:7px 12px;
+  border-radius:3px}
+
+/* ═══════════════ SLOT FAMILY ═══════════════ */
+[class*="C-sl-"] .stack{gap:10px}
+[class*="C-sl-"] .blk{position:relative;flex-direction:row;align-items:center;gap:14px;
+  padding:8px 18px;
+  clip-path:polygon(22px 0,100% 0,100% calc(100% - 22px),calc(100% - 22px) 100%,0 100%,0 22px)}
+[class*="C-sl-"] .lab{flex:none;width:92px;height:100%;flex-direction:column;align-items:center;
+  justify-content:center;gap:2px}
+[class*="C-sl-"] .pl{font:800 66px/1 Montserrat,Inter,sans-serif;letter-spacing:-.05em}
+[class*="C-sl-"] .pl sup{display:none}
+[class*="C-sl-"] .nm{position:absolute;left:116px;top:5px;font-size:14px;letter-spacing:.15em;
+  max-width:380px;color:var(--meta)}
+[class*="C-sl-"] .lab .rule{display:none}
+[class*="C-sl-"] .rc{position:absolute;right:18px;top:5px;font-size:15px}
+[class*="C-sl-"] .team{flex:1;padding-top:10px}
+
+/* 09 medal slots */
+.C-sl-medal .blk{background:linear-gradient(100deg,#242424,#161616);
+  box-shadow:inset 0 0 0 2px var(--med)}
+.C-sl-medal .pl{color:transparent;-webkit-text-stroke:2px var(--med)}
+.C-sl-medal .nm{color:var(--med)}
+
+/* 10 type gradient slots */
+.C-sl-typegrad .blk{background:linear-gradient(102deg,var(--ta),var(--tb))}
+.C-sl-typegrad .pl{color:rgb(26 26 26/.86)}
+.C-sl-typegrad .nm{color:rgb(26 26 26/.86)}
+.C-sl-typegrad .rc{color:rgb(26 26 26/.78)}
+
+/* 11 neon outline slots */
+.C-sl-neon .blk{background:#050505;box-shadow:inset 0 0 0 3px var(--neon),0 0 30px -8px var(--neon)}
+.C-sl-neon .pl{color:transparent;-webkit-text-stroke:3px var(--neon)}
+.C-sl-neon .nm{color:var(--neon)}
+.C-sl-neon .rc{color:var(--neon)}
+
+/* 12 solid plates with an inset dark panel */
+.C-sl-solid .blk{background:var(--med)}
+.C-sl-solid .pl{color:rgb(26 26 26/.9)}
+.C-sl-solid .nm{color:rgb(26 26 26/.86)}
+.C-sl-solid .rc{color:rgb(26 26 26/.78)}
+.C-sl-solid .team{background:rgb(13 13 13/.82);border-radius:8px;padding:6px 10px;margin-top:8px}
+
+/* 13 type underlines */
+.C-sl-typestrip .blk{background:linear-gradient(100deg,#232323,#151515);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255/.09)}
+.C-sl-typestrip .pl{color:transparent;-webkit-text-stroke:2px var(--sig)}
+.C-sl-typestrip .nm{color:var(--sig)}
+.C-sl-typestrip .team{align-items:flex-start}
+
+/* 14 quad grid — 2×2 plates, each team wrapped 3×2 */
+.C-sl-grid .stack{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px}
+.C-sl-grid .blk{flex-direction:column;align-items:stretch;gap:6px;padding:12px;
+  background:linear-gradient(150deg,var(--med),rgb(13 13 13/.92) 72%);
+  box-shadow:inset 0 0 0 2px var(--med)}
+.C-sl-grid .lab{flex-direction:row;width:auto;height:auto;align-items:baseline;
+  justify-content:flex-start;gap:9px}
+.C-sl-grid .pl{position:static;font-size:40px;color:var(--med-ink)}
+.C-sl-grid .nm{position:static;font-size:15px;letter-spacing:.08em;color:var(--med-ink);max-width:none}
+.C-sl-grid .rc{position:static;margin-left:auto;font-size:15px;color:rgb(26 26 26/.75)}
+.C-sl-grid .team{flex:1;flex-wrap:wrap;justify-content:center;align-content:center;gap:6px;
+  padding-top:0;background:rgb(13 13 13/.5);border-radius:8px}
+.C-sl-grid .pk{width:var(--icon);height:var(--icon)}
+
+/* 15 corner tabs */
+.C-sl-numtab .blk{background:#141414;box-shadow:inset 0 0 0 1px rgb(255 255 255/.10);
+  padding-left:96px}
+.C-sl-numtab .lab{position:absolute;left:0;top:0;bottom:0;width:80px;background:var(--neon);
+  clip-path:polygon(0 0,100% 0,calc(100% - 20px) 100%,0 100%)}
+.C-sl-numtab .pl{font-size:52px;color:rgb(26 26 26/.9)}
+.C-sl-numtab .nm{left:110px;color:#fff}
+.C-sl-numtab .rc{color:var(--neon)}
+.C-sl-numtab .team{padding-top:12px}
+
+/* 16 inverted plates — light on dark page, the contrast extreme */
+.C-sl-invert .blk{background:#f3ece3;box-shadow:inset 0 0 0 3px var(--med)}
+.C-sl-invert .pl{color:var(--med);-webkit-text-stroke:0}
+.C-sl-invert .nm{color:#2c211b}
+.C-sl-invert .rc{color:#5b4c40}
+.C-sl-invert .pk--empty{background:#8b7d6d}

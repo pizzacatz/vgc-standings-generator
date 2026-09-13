@@ -1,0 +1,5 @@
+# Rendered output — regenerate with node src/card.mjs / src/render.mjs
+out/
+__pycache__/
+*.pyc
+.DS_Store

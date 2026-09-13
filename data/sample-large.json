@@ -1,0 +1,218 @@
+{
+  "event": "Atlanta Champions Series #4",
+  "location": "Atlanta, GA",
+  "date": "12 September 2026",
+  "players": 312,
+  "division": "Masters",
+  "format": "Reg M-C",
+  "showCp": true,
+  "_note": "Same teams as sample-top16.json, but a large-event record and CP spread so the reserved column widths (double-digit W-L, triple-digit CP) are visible rather than assumed.",
+  "standings": [
+    {
+      "name": "Marisol Okafor",
+      "record": "12-1",
+      "cp": 128,
+      "team": [
+        "charizardmegay",
+        "torkoal",
+        "whimsicott",
+        "incineroar",
+        "dragapult",
+        "gholdengo"
+      ]
+    },
+    {
+      "name": "Devon Ashcroft",
+      "record": "10-3",
+      "cp": 96,
+      "team": [
+        "metagrossmega",
+        "pelipper",
+        "basculegion",
+        "farigiraf",
+        "kingambit",
+        "talonflame"
+      ]
+    },
+    {
+      "name": "Priya Venkatesan",
+      "record": "9-4",
+      "cp": 64,
+      "team": [
+        "garchompmega",
+        "politoed",
+        "primarina",
+        "grimmsnarl",
+        "volcarona",
+        "corviknight"
+      ]
+    },
+    {
+      "name": "Tobias Lindqvist",
+      "record": "8-5",
+      "cp": 8,
+      "team": [
+        "gengarmega",
+        "tyranitarmega",
+        "whimsicott",
+        "milotic",
+        "excadrill",
+        "talonflame"
+      ]
+    },
+    {
+      "name": "Kenji Nakamura",
+      "record": "9-3",
+      "cp": 48,
+      "team": [
+        "gardevoirmega",
+        "incineroar",
+        "dragapult",
+        "toxapex",
+        "hatterene",
+        "weavile"
+      ]
+    },
+    {
+      "name": "Amara Blackwood",
+      "record": "9-3",
+      "cp": 48,
+      "team": [
+        "swampertmega",
+        "pelipper",
+        "kingambit",
+        "whimsicott",
+        "volcarona",
+        "ninetalesalola"
+      ]
+    },
+    {
+      "name": "Rafael Duarte",
+      "record": "8-3",
+      "cp": 48,
+      "team": [
+        "lucariomega",
+        "scizormega",
+        "farigiraf",
+        "torkoal",
+        "milotic",
+        "annihilape"
+      ]
+    },
+    {
+      "name": "Sienna Marchetti",
+      "record": "8-3",
+      "cp": 48,
+      "team": [
+        "venusaurmega",
+        "torkoal",
+        "oranguru",
+        "mimikyu",
+        "kommoo",
+        "talonflame"
+      ]
+    },
+    {
+      "name": "Bo Whitfield",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "charizardmegax",
+        "incineroar",
+        "whimsicott",
+        "gholdengo",
+        "azumarill",
+        "hydreigon"
+      ]
+    },
+    {
+      "name": "Nadia Ferreira",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "gyaradosmega",
+        "politoed",
+        "toxapex",
+        "farigiraf",
+        "sneasler",
+        "corviknight"
+      ]
+    },
+    {
+      "name": "Elliot Vance",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "heracrossmega",
+        "torkoal",
+        "milotic",
+        "grimmsnarl",
+        "dragapult",
+        "excadrill"
+      ]
+    },
+    {
+      "name": "Yusuf El-Amin",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "kangaskhanmega",
+        "pelipper",
+        "primarina",
+        "mimikyu",
+        "kingambit",
+        "talonflame"
+      ]
+    },
+    {
+      "name": "Clara Nyberg",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "mawilemega",
+        "incineroar",
+        "whimsicott",
+        "hatterene",
+        "weavile",
+        "gholdengo"
+      ]
+    },
+    {
+      "name": "Malik Osei",
+      "record": "7-3",
+      "cp": 32,
+      "team": [
+        "scizormega",
+        "torkoal",
+        "oranguru",
+        "annihilape",
+        "milotic",
+        "hydreigon"
+      ]
+    },
+    {
+      "name": "Ingrid Sorensen",
+      "record": "6-4",
+      "cp": 32,
+      "team": [
+        "slowbromega",
+        "politoed",
+        "azumarill",
+        "kingambit",
+        "volcarona",
+        "corviknight"
+      ]
+    },
+    {
+      "name": "Theo Brennan",
+      "record": "6-4",
+      "cp": 32,
+      "team": [
+        "tyranitarmega",
+        "pelipper",
+        "toxapex",
+        "mimikyu"
+      ]
+    }
+  ]
+}

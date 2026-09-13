@@ -1,0 +1,27 @@
+{
+  "event": "Atlanta Champions Series #4",
+  "location": "Atlanta, GA",
+  "date": "12 September 2026",
+  "players": 42,
+  "division": "Masters",
+  "format": "Reg M-C",
+  "showCp": true,
+  "standings": [
+    { "name": "Marisol Okafor",   "record": "7-0", "cp": 80, "team": ["charizardmegay", "torkoal", "whimsicott", "incineroar", "dragapult", "gholdengo"] },
+    { "name": "Devon Ashcroft",   "record": "6-1", "cp": 64, "team": ["metagrossmega", "pelipper", "basculegion", "farigiraf", "kingambit", "talonflame"] },
+    { "name": "Priya Venkatesan", "record": "6-1", "cp": 48, "team": ["garchompmega", "politoed", "primarina", "grimmsnarl", "volcarona", "corviknight"] },
+    { "name": "Tobias Lindqvist", "record": "5-2", "cp": 48, "team": ["gengarmega", "tyranitarmega", "whimsicott", "milotic", "excadrill", "talonflame"] },
+    { "name": "Kenji Nakamura",   "record": "6-1", "cp": 32, "team": ["gardevoirmega", "incineroar", "dragapult", "toxapex", "hatterene", "weavile"] },
+    { "name": "Amara Blackwood",  "record": "5-2", "cp": 32, "team": ["swampertmega", "pelipper", "kingambit", "whimsicott", "volcarona", "ninetalesalola"] },
+    { "name": "Rafael Duarte",    "record": "5-2", "cp": 32, "team": ["lucariomega", "scizormega", "farigiraf", "torkoal", "milotic", "annihilape"] },
+    { "name": "Sienna Marchetti", "record": "5-2", "cp": 32, "team": ["venusaurmega", "torkoal", "oranguru", "mimikyu", "kommoo", "talonflame"] },
+    { "name": "Bo Whitfield",     "record": "5-2", "cp": 16, "team": ["charizardmegax", "incineroar", "whimsicott", "gholdengo", "azumarill", "hydreigon"] },
+    { "name": "Nadia Ferreira",   "record": "4-3", "cp": 16, "team": ["gyaradosmega", "politoed", "toxapex", "farigiraf", "sneasler", "corviknight"] },
+    { "name": "Elliot Vance",     "record": "4-3", "cp": 16, "team": ["heracrossmega", "torkoal", "milotic", "grimmsnarl", "dragapult", "excadrill"] },
+    { "name": "Yusuf El-Amin",    "record": "4-3", "cp": 16, "team": ["kangaskhanmega", "pelipper", "primarina", "mimikyu", "kingambit", "talonflame"] },
+    { "name": "Clara Nyberg",     "record": "4-3", "cp": 16, "team": ["mawilemega", "incineroar", "whimsicott", "hatterene", "weavile", "gholdengo"] },
+    { "name": "Malik Osei",       "record": "4-3", "cp": 16, "team": ["scizormega", "torkoal", "oranguru", "annihilape", "milotic", "hydreigon"] },
+    { "name": "Ingrid Sorensen",  "record": "4-3", "cp": 16, "team": ["slowbromega", "politoed", "azumarill", "kingambit", "volcarona", "corviknight"] },
+    { "name": "Theo Brennan",     "record": "4-3", "cp": 16, "team": ["tyranitarmega", "pelipper", "toxapex", "mimikyu"] }
+  ]
+}

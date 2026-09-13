@@ -1,0 +1,49 @@
+/* GeorgiaPlayEvents brand primitives.
+   Mirrors COLOR-SCHEME.md §8.3 `brand/tokens.css`. Vendored, not redefined.
+   Values here are primitives only — semantic names live in standings.css. */
+:root {
+  /* headline gradient — decorative only, never an interaction surface */
+  --gpe-gold:        #ffd180;
+  --gpe-coral:       #ff9e80;
+  /* interactive accents */
+  --gpe-peach:       #ffb072;
+  --gpe-burnt:       #a85526;
+  /* dark surfaces */
+  --gpe-black:       #0d0d0d;
+  --gpe-surface:     #1a1a1a;
+  --gpe-hover:       #2a2a2a;
+  --gpe-rule:        #8a6f42;  /* calendar --border-dim */
+  /* text */
+  --gpe-paper:       #f8efe5;
+  --gpe-paper-muted: #cfc4ba;
+  --gpe-ink:         #1a1a1a;
+
+  /* game category — calendar app.js CALENDARS */
+  --cat-vgc:         #ef5350;
+  --cat-tcg-cup:     #64b5f6;
+  --cat-tcg-chal:    #4dd0e1;
+  --cat-go:          #66bb6a;
+  --cat-prerelease:  #b39ddb;
+  --cat-community:   #ffa726;
+
+  /* event tier — majors-map dark theme; --tier-worlds brightened per
+     BRACKET-GRAPHIC-GUIDE.md §6 (map's #d24848 is 3.95 behind text) */
+  --tier-regional:      #cf854e;
+  --tier-special:       #e5b83a;
+  --tier-international: #b06fa6;
+  --tier-worlds:        #d75c5c;
+}
+
+/* ── Graphic-local semantic layer (BRACKET-GRAPHIC-GUIDE.md §3) ───────── */
+:root {
+  --page:       var(--gpe-black);
+  --node:       var(--gpe-surface);
+  --node-raise: var(--gpe-hover);
+  --rule:       var(--gpe-rule);
+  --name:       var(--gpe-paper);
+  --meta:       var(--gpe-paper-muted);
+  --advance:    var(--gpe-peach);
+  --champ-from: var(--gpe-gold);
+  --champ-to:   var(--gpe-coral);
+  --on-champ:   var(--gpe-ink);
+}

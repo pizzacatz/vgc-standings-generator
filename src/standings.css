@@ -1,0 +1,315 @@
+/* VGC Final Standings graphic.
+   Follows docs/BRACKET-GRAPHIC-GUIDE.md — dark-only, bordered nodes, one
+   champion gradient, no state encoded by color alone. Geometry comes from
+   inline custom properties emitted by render.mjs (see LAYOUTS there). */
+
+@import url("../assets/fonts.css");
+@import url("./tokens.css");
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body { font-family: Inter, system-ui, sans-serif; }
+
+/* ── Canvas ───────────────────────────────────────────────────────────── */
+
+.card {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  padding: var(--pad);
+  background: var(--page);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* A single, very low-contrast warm wash off the champion corner. Keeps a
+   1080px field of near-black from reading as flat, and dies completely at
+   thumbnail size — it is texture, not information. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 62% at 88% -8%, rgb(255 176 114 / .11), transparent 62%),
+    radial-gradient(90% 48% at 6% 104%, rgb(255 158 128 / .05), transparent 70%);
+  pointer-events: none;
+}
+
+.card > * { position: relative; }
+
+/* ── Header ───────────────────────────────────────────────────────────── */
+
+/* flex:none + a hard height keeps the body box exactly what the solver in
+   render.mjs assumed; a long title clips rather than shoving the footer off. */
+.head { height: var(--head-h); flex: none; overflow: hidden; display: flex; flex-direction: column; }
+
+
+.title {
+  font: 800 var(--title-fs)/1.02 Montserrat, Inter, sans-serif;
+  letter-spacing: -.018em;
+  color: var(--name);
+  text-wrap: balance;
+}
+
+.sub {
+  font: 600 var(--sub-fs)/1.25 Inter;
+  letter-spacing: .015em;
+  color: var(--meta);
+  margin-top: calc(var(--sub-fs) * .46);
+}
+
+/* Round label + cut badge, separated by a hairline that fills the gap.
+   --rule as a line only, never as text (guide §9.3). */
+.cutbar {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--cut-fs) * .8);
+  margin-top: auto;
+  padding-bottom: calc(var(--cut-fs) * .55);
+}
+.cutbar__label {
+  font: 700 var(--cut-fs)/1 Inter;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  color: var(--meta);
+  white-space: nowrap;
+}
+.cutbar__rule { flex: 1; height: 1px; background: var(--rule); }
+
+/* Landscape has ~400px of body box to spend; the header collapses to one
+   row so the rows get the height instead. */
+.head--compact {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pad);
+  border-bottom: 1px solid var(--rule);
+}
+.head--compact .title { margin-top: 0; }
+.head--compact .head__main { min-width: 0; }
+.head--compact .head__side {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(var(--cut-fs) * .5);
+}
+
+.cutbar__cut {
+  font: 800 calc(var(--cut-fs) * 1.32)/1 Inter;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--advance);
+  white-space: nowrap;
+}
+
+/* ── Rows ─────────────────────────────────────────────────────────────── */
+
+.rows { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+.grp { display: flex; flex-direction: column; gap: var(--gap-in); }
+.grp + .grp { margin-top: var(--gap-out); }
+
+/* Two-up. Compounded with .grp so it outranks the display:flex above —
+   at equal specificity the later rule would win and the split would
+   silently not happen, overflowing the canvas. */
+.grp.rows--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+}
+
+.row {
+  position: relative;
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  gap: var(--col-gap);
+  padding-right: calc(var(--row-h) * .22);
+  background: var(--node);
+  /* Every node gets a border — the fills alone are 1.12:1 (guide §3). */
+  border: 1px solid var(--rule);
+  border-radius: calc(var(--row-h) * .13);
+  overflow: hidden;
+  opacity: var(--row-op, 1);
+}
+
+/* Advance bar. Its WIDTH carries the placement tier, so the ranking still
+   reads with color removed (guide §9.1). */
+.row::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: var(--bar-w, 4px);
+  background: var(--advance);
+}
+
+/* ── Placement ────────────────────────────────────────────────────────── */
+
+.place {
+  flex: none;
+  width: var(--place-w);
+  /* The bar SLOT, not the drawn bar width — otherwise a wider bar on a higher
+     placement would shift that row's columns out of line with the rest. */
+  margin-left: var(--bar-slot, 10px);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: .06em;
+  color: var(--meta);
+  font-variant-numeric: tabular-nums;
+}
+.place__n { font: 800 var(--place-fs)/1 Inter; letter-spacing: -.03em; }
+.place__o { font: 700 calc(var(--place-fs) * .46)/1 Inter; letter-spacing: .02em; }
+.place__r { font: 700 calc(var(--place-fs) * .68)/1 Inter; letter-spacing: -.01em; }
+
+/* ── Name ─────────────────────────────────────────────────────────────── */
+
+.who { flex: 1; min-width: 0; }
+.pname {
+  font: 600 var(--name-fs)/1.1 Inter;
+  letter-spacing: -.012em;
+  color: var(--name);
+  /* Truncation rule, fixed up front (guide §9.7): single line, ellipsis. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pteam {
+  font: 600 calc(var(--name-fs) * .58)/1 Inter;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--meta);
+  margin-top: calc(var(--name-fs) * .17);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Team icons ───────────────────────────────────────────────────────── */
+
+.team {
+  flex: none;
+  display: flex;
+  gap: var(--icon-gap);
+  align-items: center;
+}
+
+.pk {
+  width: var(--icon);
+  height: var(--icon);
+  flex: none;
+  background-image: var(--src);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Unknown team slot. The silhouette ships solid black, which is invisible on
+   a #1a1a1a node — mask it instead of drawing it, so the fill colour is ours
+   and it reads as an absence rather than as a pick. */
+.pk--empty {
+  background: var(--rule);
+  opacity: .55;
+  -webkit-mask-image: var(--mask);
+          mask-image: var(--mask);
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+}
+
+/* ── Record / CP ──────────────────────────────────────────────────────── */
+
+.stats {
+  flex: none;
+  width: var(--stats-w);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: calc(var(--rec-fs) * .22);
+}
+.rec {
+  font: 700 var(--rec-fs)/1 Inter;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .01em;
+  color: var(--name);
+}
+.cp {
+  font: 700 calc(var(--rec-fs) * .68)/1 Inter;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .07em;
+  color: var(--meta);
+  white-space: nowrap;
+}
+
+/* ── Champion ─────────────────────────────────────────────────────────── */
+
+/* The one place the brand gradient is spent. Exactly one per graphic. */
+.row--champ {
+  background: linear-gradient(103deg, var(--champ-from), var(--champ-to));
+  border-color: transparent;
+  opacity: 1;
+}
+.row--champ::before { width: 0; }              /* the fill IS the signal */
+.row--champ .place  { margin-left: 0; color: rgb(26 26 26 / .74); }
+.row--champ .pname  { color: var(--on-champ); font-weight: 800; }
+.row--champ .pteam  { color: rgb(26 26 26 / .66); }
+.row--champ .rec    { color: var(--on-champ); }
+.row--champ .cp     { color: rgb(26 26 26 / .70); }
+
+/* Guarantees pale sprites separate from the gold end of the gradient. */
+.row--champ .team {
+  background: rgb(13 13 13 / .13);
+  border-radius: calc(var(--row-h) * .10);
+  padding: calc(var(--row-h) * .05) calc(var(--row-h) * .07);
+}
+
+/* Stacked variant: name over team, used where a row is tall enough.
+   Place, name and stats stay on one line; the team strip hangs below it. */
+.row--stack { align-items: flex-start; padding-top: calc(var(--row-h) * .11); }
+.row--stack .body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--name-fs) * .28);
+}
+.row--stack .body .team { align-self: flex-start; }
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+
+.foot {
+  height: var(--foot-h);
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--pad);
+  border-top: 1px solid var(--rule);
+  padding-top: calc(var(--foot-fs) * .9);
+}
+.mark {
+  font: 800 calc(var(--foot-fs) * 1.16)/1 Montserrat, Inter, sans-serif;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--name);
+  white-space: nowrap;
+}
+.mark span { color: var(--advance); }
+.disclaim {
+  font: 500 var(--foot-fs)/1.35 Inter;
+  letter-spacing: .01em;
+  color: var(--meta);
+  text-align: right;
+  max-width: 62%;
+}

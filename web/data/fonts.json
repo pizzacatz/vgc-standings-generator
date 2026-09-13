@@ -1,0 +1,32 @@
+[
+ {
+  "family": "Inter",
+  "weight": "500",
+  "file": "fonts/Inter-1fab01e7.woff2"
+ },
+ {
+  "family": "Inter",
+  "weight": "600",
+  "file": "fonts/Inter-1fab01e7.woff2"
+ },
+ {
+  "family": "Inter",
+  "weight": "700",
+  "file": "fonts/Inter-1fab01e7.woff2"
+ },
+ {
+  "family": "Inter",
+  "weight": "800",
+  "file": "fonts/Inter-1fab01e7.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "weight": "700",
+  "file": "fonts/Montserrat-4173f6ad.woff2"
+ },
+ {
+  "family": "Montserrat",
+  "weight": "800",
+  "file": "fonts/Montserrat-4173f6ad.woff2"
+ }
+]

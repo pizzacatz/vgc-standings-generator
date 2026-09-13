@@ -1,0 +1,341 @@
+/* Gallery chrome + sixteen Top 4 layouts on one shared 1080×1080 canvas.
+   Palette is the GeorgiaPlayEvents brand root (see src/tokens.css). */
+
+:root{
+  --page:#0d0d0d; --node:#1a1a1a; --node-raise:#2a2a2a; --rule:#8a6f42;
+  --name:#f8efe5; --meta:#cfc4ba; --advance:#ffb072;
+  --champ-from:#ffd180; --champ-to:#ff9e80; --on-champ:#1a1a1a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080808;color:var(--name);font-family:Inter,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+/* ── Gallery ─────────────────────────────────────────────────────────── */
+
+.page{padding:48px 40px 8px;max-width:1700px;margin:0 auto}
+.page h1{font:800 34px/1.1 Montserrat,Inter,sans-serif;letter-spacing:-.02em}
+.page p{margin-top:10px;color:var(--meta);font:500 15px/1.5 Inter;max-width:70ch}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,400px);justify-content:center;
+  gap:44px 34px;padding:32px 40px 80px;max-width:1780px;margin:0 auto}
+.demo figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:12px}
+.demo__n{font:800 13px/1 Inter;color:var(--advance);letter-spacing:.08em}
+.demo__title{font:700 17px/1.2 Inter;letter-spacing:-.01em}
+.demo__tag{font:700 10px/1 Inter;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 8px;border-radius:5px;color:#1a1a1a}
+.demo__tag--conservative{background:#8fbf7a}
+.demo__tag--balanced{background:#e5b83a}
+.demo__tag--experimental{background:#d17ac4}
+.demo__note{flex:0 0 100%;color:var(--meta);font:500 13px/1.45 Inter}
+.demo figcaption{min-height:104px;align-content:start}
+
+/* Cards are authored at 1080 and scaled to fit the cell. */
+/* Fixed frame so the scale factor is exact rather than approximate. */
+.frame{width:400px;height:400px;overflow:hidden;border-radius:10px;
+  border:1px solid #222;background:var(--page)}
+.frame .card{transform-origin:0 0;transform:scale(0.37037)}
+
+/* ── Shared card primitives ──────────────────────────────────────────── */
+
+.card{position:relative;width:1080px;height:1080px;padding:52px;background:var(--page);
+  display:flex;flex-direction:column;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 60% at 88% -8%,rgb(255 176 114/.11),transparent 62%)}
+.card>*{position:relative}
+
+.head{flex:none;display:flex;flex-direction:column;margin-bottom:22px}
+.title{font:800 46px/1.03 Montserrat,Inter,sans-serif;letter-spacing:-.02em;color:var(--name)}
+.sub{margin-top:12px;font:600 21px/1.25 Inter;color:var(--meta)}
+.cutbar{display:flex;align-items:center;gap:16px;margin-top:22px}
+.cutbar__label{font:700 19px/1 Inter;letter-spacing:.17em;text-transform:uppercase;color:var(--meta)}
+.cutbar__rule{flex:1;height:1px;background:var(--rule)}
+.cutbar__cut{font:800 25px/1 Inter;letter-spacing:.05em;text-transform:uppercase;color:var(--advance)}
+
+.rows{flex:1;display:flex;flex-direction:column;gap:14px;min-height:0}
+
+.row{position:relative;flex:1;display:flex;align-items:center;gap:20px;padding:0 22px;
+  background:var(--node);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.bar{position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--advance)}
+.row:nth-child(2) .bar{width:9px}
+.row:nth-child(3) .bar{width:6px}
+.row:nth-child(4) .bar{width:5px}
+.row:nth-child(3){opacity:.94}
+.row:nth-child(4){opacity:.86}
+
+.place{flex:none;display:flex;align-items:baseline;gap:2px;color:var(--meta);
+  font-variant-numeric:tabular-nums;margin-left:10px}
+.place b{font:800 46px/1 Inter;letter-spacing:-.03em}
+.place sup{font:700 20px/1 Inter;vertical-align:baseline}
+
+.who{flex:1;min-width:0}
+.pname{font:600 36px/1.12 Inter;letter-spacing:-.012em;color:var(--name);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.team{flex:none;display:flex;gap:5px;align-items:center}
+.team--wrap{flex-wrap:wrap;justify-content:center}
+.team--col{flex-direction:column;gap:6px}
+.pk{width:56px;height:56px;flex:none;background-size:contain;
+  background-repeat:no-repeat;background-position:center}
+.pk--empty{background:var(--rule);opacity:.55;
+  -webkit-mask-image:var(--mask);mask-image:var(--mask);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center}
+
+.stats{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.rec{font:700 26px/1 Inter;font-variant-numeric:tabular-nums;color:var(--name)}
+.cp{font:700 17px/1 Inter;font-variant-numeric:tabular-nums;letter-spacing:.06em;color:var(--meta)}
+
+/* One champion gradient per card — the brand's scarcest element. */
+.row--champ{background:linear-gradient(103deg,var(--champ-from),var(--champ-to));
+  border-color:transparent;opacity:1}
+.row--champ .bar{width:0}
+.row--champ .place{color:rgb(26 26 26/.72)}
+.row--champ .pname{color:var(--on-champ);font-weight:800}
+.row--champ .rec{color:var(--on-champ)}
+.row--champ .cp{color:rgb(26 26 26/.7)}
+.row--champ .team{background:rgb(13 13 13/.13);border-radius:10px;padding:6px 8px}
+
+.foot{flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:28px;
+  border-top:1px solid var(--rule);padding-top:14px;margin-top:18px}
+.mark{font:800 17px/1 Montserrat,Inter,sans-serif;letter-spacing:.04em;text-transform:uppercase}
+.mark span{color:var(--advance)}
+.disclaim{font:500 12px/1.35 Inter;color:var(--meta);text-align:right;max-width:60%}
+
+/* ═══ 01 baseline ═════════════════════════════════════════════════════ */
+.L-baseline .row--champ{flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:10px;padding:20px 22px;flex:1.55}
+.L-baseline .row--champ .who{display:flex;flex-direction:column;gap:12px;width:100%}
+.L-baseline .row--champ .pk{width:74px;height:74px}
+.L-baseline .row--champ .place{position:absolute;top:22px;left:26px}
+.L-baseline .row--champ .pname{margin-left:96px}
+.L-baseline .row--champ .stats{position:absolute;top:24px;right:26px}
+.L-baseline .row--champ .team{align-self:flex-start}
+
+/* ═══ 02 flat — no hero, gradient demoted to a bar ════════════════════ */
+.L-flat .row--champ{background:var(--node);border-color:var(--rule)}
+.L-flat .row--champ .bar{width:14px;background:linear-gradient(180deg,var(--champ-from),var(--champ-to))}
+.L-flat .row--champ .place,.L-flat .row--champ .cp{color:var(--meta)}
+.L-flat .row--champ .pname{color:var(--name);font-weight:800}
+.L-flat .row--champ .rec{color:var(--name)}
+.L-flat .row--champ .team{background:none;padding:0}
+
+/* ═══ 03 hairline — no fills, no borders ══════════════════════════════ */
+.L-hairline .rows{gap:0}
+.L-hairline .row{background:none;border:0;border-top:1px solid var(--rule);border-radius:0;padding:0 8px}
+.L-hairline .row:last-child{border-bottom:1px solid var(--rule)}
+.L-hairline .bar{display:none}
+.L-hairline .place{margin-left:0}
+.L-hairline .row--champ{background:none}
+.L-hairline .row--champ .place b{background:linear-gradient(103deg,var(--champ-from),var(--champ-to));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.L-hairline .row--champ .place sup{color:var(--champ-to)}
+.L-hairline .row--champ .pname,.L-hairline .row--champ .rec{color:var(--name)}
+.L-hairline .row--champ .cp{color:var(--meta)}
+.L-hairline .row--champ .team{background:none;padding:0}
+
+/* ═══ 04 teams follow the name ════════════════════════════════════════ */
+.L-leftteams .who{flex:none;width:340px}
+.L-leftteams .team{flex:1;justify-content:flex-start}
+.L-leftteams .pk{width:50px;height:50px}
+
+/* ═══ 05 compact — icon-forward ═══════════════════════════════════════ */
+.L-compact .rows{gap:10px}
+.L-compact .pk{width:78px;height:78px}
+.L-compact .place b{font-size:36px}
+.L-compact .place sup{font-size:16px}
+.L-compact .pname{font-size:31px}
+.L-compact .row{gap:16px;padding:0 18px}
+.L-compact .row--champ .team{padding:5px 7px}
+
+/* ═══ 06 podium ═══════════════════════════════════════════════════════ */
+.L-podium .rows{gap:16px}
+.L-podium .podium{flex:1;display:grid;grid-template-columns:1fr 1.18fr 1fr;
+  gap:14px;align-items:end}
+.L-podium .pod{display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:20px 12px;background:var(--node);border:1px solid var(--rule);
+  border-radius:14px 14px 0 0}
+.L-podium .pod--1{height:78%}
+.L-podium .pod--2{height:68%;opacity:.94}
+.L-podium .pod--0{height:100%;background:linear-gradient(168deg,var(--champ-from),var(--champ-to));
+  border-color:transparent}
+.L-podium .pod--0 .pname,.L-podium .pod--0 .rec{color:var(--on-champ)}
+.L-podium .pod--0 .place{color:rgb(26 26 26/.72)}
+.L-podium .pod--0 .cp{color:rgb(26 26 26/.7)}
+.L-podium .pod .place{margin:0}
+.L-podium .pod .pname{font-size:27px;text-align:center}
+.L-podium .pod--0 .pname{font-size:31px;font-weight:800}
+.L-podium .team--wrap{max-width:200px;gap:6px}
+.L-podium .pk{width:52px;height:52px}
+.L-podium .pod .stats{align-items:center;margin-top:auto}
+.L-podium .row{flex:none;height:96px}
+
+/* ═══ 07 spotlight ════════════════════════════════════════════════════ */
+.L-spotlight .hero{flex:2.3;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:16px;padding:26px}
+.L-spotlight .hero .place{position:absolute;top:24px;left:28px}
+.L-spotlight .hero .place b{font-size:64px}
+.L-spotlight .hero .place sup{font-size:26px}
+.L-spotlight .hero .who{width:100%;margin-top:34px;padding-left:118px}
+.L-spotlight .hero .pname{font-size:52px}
+.L-spotlight .hero .stats{position:absolute;top:26px;right:28px}
+.L-spotlight .hero .rec{font-size:38px}
+.L-spotlight .hero .pk{width:96px;height:96px}
+.L-spotlight .hero .team{align-self:flex-start;gap:8px}
+
+/* ═══ 08 vertical split ═══════════════════════════════════════════════ */
+.L-split{padding:0}
+.L-split .split{flex:1;display:grid;grid-template-columns:.76fr 1.24fr;min-height:0}
+.L-split .split__champ{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:18px;padding:40px 26px;
+  background:linear-gradient(168deg,var(--champ-from),var(--champ-to))}
+.L-split .split__champ .place{color:rgb(26 26 26/.72)}
+.L-split .split__champ .place b{font-size:72px}
+.L-split .split__champ .place sup{font-size:30px}
+.L-split .split__champ .pname{color:var(--on-champ);font-weight:800;font-size:36px;text-align:center}
+.L-split .split__champ .team--wrap{max-width:232px;gap:9px}
+.L-split .split__champ .pk{width:68px;height:68px}
+.L-split .split__champ .stats{align-items:center}
+.L-split .split__champ .rec{color:var(--on-champ);font-size:34px}
+.L-split .split__champ .cp{color:rgb(26 26 26/.7)}
+.L-split .split__rest{display:flex;flex-direction:column;padding:44px 44px 40px;min-width:0}
+.L-split .split__rest .row{flex:1;gap:12px 14px;padding:14px 16px;
+  flex-wrap:wrap;align-content:center}
+/* The right column is ~510px — a name and six icons will not share a line
+   there, so the team wraps beneath rather than eating the name. */
+.L-split .split__rest .who{flex:1 1 auto;min-width:0}
+.L-split .split__rest .who{order:1}
+.L-split .split__rest .stats{order:2;align-items:flex-end}
+/* order keeps the record on the name's line; only the team wraps below. */
+.L-split .split__rest .team{order:3;flex:1 0 100%;justify-content:flex-start}
+.L-split .split__rest .pk{width:44px;height:44px}
+.L-split .split__rest .rows{gap:12px}
+.L-split .title{font-size:34px}
+.L-split .sub{font-size:16px}
+.L-split .cutbar__label{font-size:14px}
+.L-split .cutbar__cut{font-size:19px}
+.L-split .pk{width:38px;height:38px}
+.L-split .pname{font-size:27px}
+.L-split .place b{font-size:34px}
+.L-split .place sup{font-size:15px}
+.L-split .rec{font-size:20px}
+.L-split .cp{font-size:13px}
+.L-split .split__rest .rows{flex:1;display:flex;flex-direction:column}
+
+/* ═══ 09 quadrant ═════════════════════════════════════════════════════ */
+.L-quad .quad{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px}
+.L-quad .qcard{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:22px;background:var(--node);border:1px solid var(--rule);border-radius:16px}
+.L-quad .qcard--champ{background:linear-gradient(140deg,var(--champ-from),var(--champ-to));
+  border-color:transparent}
+.L-quad .qcard--champ .pname,.L-quad .qcard--champ .rec{color:var(--on-champ)}
+.L-quad .qcard--champ .place{color:rgb(26 26 26/.72)}
+.L-quad .qcard--champ .cp{color:rgb(26 26 26/.7)}
+.L-quad .place{margin:0}
+.L-quad .pname{font-size:29px;text-align:center}
+.L-quad .team--wrap{max-width:236px;gap:8px}
+.L-quad .pk{width:62px;height:62px}
+.L-quad .stats{align-items:center}
+
+/* ═══ 10 numeral watermark ════════════════════════════════════════════ */
+.L-watermark .ghost{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  font:800 168px/1 Montserrat,Inter,sans-serif;color:rgb(248 239 229/.07);
+  pointer-events:none;letter-spacing:-.06em}
+.L-watermark .row--champ .ghost{color:rgb(26 26 26/.16)}
+.L-watermark .who{margin-left:132px}
+
+/* ═══ 11 bracket echo ═════════════════════════════════════════════════ */
+.L-bracket .rows--bracket{position:relative;padding-right:104px}
+.L-bracket .tree{position:absolute;right:0;top:0;width:96px;height:100%;
+  fill:none;stroke:var(--rule);stroke-width:2;opacity:.75}
+
+/* ═══ 12 sheared ══════════════════════════════════════════════════════ */
+.L-skew .rows{gap:0;padding:0 6px}
+.L-skew .row{transform:skewX(-9deg);margin-bottom:-6px;border-width:2px;border-radius:6px}
+.L-skew .row:nth-child(1){margin-left:0}
+.L-skew .row:nth-child(2){margin-left:26px}
+.L-skew .row:nth-child(3){margin-left:52px}
+.L-skew .row:nth-child(4){margin-left:78px}
+.L-skew .deskew{transform:skewX(9deg);display:flex;align-items:center;gap:20px;
+  width:100%;padding:0 10px}
+.L-skew .bar{width:10px}
+.L-skew .who{flex:1}
+.L-skew .pname{font-size:33px;text-transform:uppercase;letter-spacing:.01em;font-weight:800}
+
+/* ═══ 13 orbit ════════════════════════════════════════════════════════ */
+.L-orbit{padding:0}
+.L-orbit .orbit{position:relative;flex:1;overflow:hidden}
+.L-orbit .orbit__head{position:absolute;top:40px;left:44px;right:44px}
+.L-orbit .orbit__head .title{font-size:32px}
+.L-orbit .orbit__head .sub{font-size:15px;margin-top:8px}
+.L-orbit .orbit__head .cutbar{margin-top:12px}
+.L-orbit .orbit__head .cutbar__label{font-size:13px}
+.L-orbit .orbit__head .cutbar__cut{font-size:18px}
+.L-orbit .orbit__ring{position:absolute;left:50%;top:57%;width:760px;height:760px;
+  margin:-380px 0 0 -380px;border:1px dashed var(--rule);border-radius:50%;opacity:.5}
+.L-orbit .orb{position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px}
+.L-orbit .orb--0{left:50%;top:57%;transform:translate(-50%,-50%);width:400px;
+  padding:26px;border-radius:50%;aspect-ratio:1;justify-content:center;
+  background:linear-gradient(150deg,var(--champ-from),var(--champ-to))}
+.L-orbit .orb--0 .place{color:rgb(26 26 26/.72)}
+.L-orbit .orb--0 .place b{font-size:54px}
+.L-orbit .orb--0 .pname{color:var(--on-champ);font-weight:800;font-size:30px;text-align:center}
+.L-orbit .orb--0 .rec{color:var(--on-champ)}
+.L-orbit .orb--0 .cp{color:rgb(26 26 26/.7)}
+.L-orbit .orb--0 .team--wrap{max-width:216px;gap:6px}
+.L-orbit .orb--0 .pk{width:56px;height:56px}
+.L-orbit .orb--0 .stats{align-items:center}
+.L-orbit .orb--1{left:50%;top:19%;transform:translateX(-50%);width:262px}
+.L-orbit .orb--2{left:2%;bottom:9%;width:270px}
+.L-orbit .orb--3{right:2%;bottom:9%;width:270px}
+.L-orbit .orb--1,.L-orbit .orb--2,.L-orbit .orb--3{padding:16px;background:var(--node);
+  border:1px solid var(--rule);border-radius:14px}
+.L-orbit .orb .place{margin:0}
+.L-orbit .orb .place b{font-size:32px}
+.L-orbit .orb .place sup{font-size:14px}
+.L-orbit .orb .pname{font-size:23px;text-align:center}
+.L-orbit .orb--1 .pk,.L-orbit .orb--2 .pk,.L-orbit .orb--3 .pk{width:38px;height:38px}
+.L-orbit .orb--1 .team--wrap,.L-orbit .orb--2 .team--wrap,.L-orbit .orb--3 .team--wrap{max-width:240px}
+
+/* ═══ 14 team wall ════════════════════════════════════════════════════ */
+.L-wall .wall{position:absolute;inset:0;display:grid;
+  grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);
+  z-index:0;opacity:.62}
+.L-wall .wall .pk{width:100%;height:100%;background-size:78%;filter:saturate(1.15)}
+.L-wall .wall__scrim{position:absolute;inset:0;z-index:0;
+  background:linear-gradient(180deg,rgb(13 13 13/.30),rgb(13 13 13/.80) 58%)}
+.L-wall .rows--onwall .row{background:rgb(13 13 13/.72);backdrop-filter:blur(3px)}
+.L-wall .rows--onwall .row--champ{background:linear-gradient(103deg,var(--champ-from),var(--champ-to))}
+
+/* ═══ 15 typographic ══════════════════════════════════════════════════ */
+.L-typo .rows--typo{gap:0}
+.L-typo .trow{position:relative;flex:1;display:flex;align-items:center;gap:24px;
+  padding:0 4px;border-bottom:1px solid var(--rule)}
+.L-typo .trow:first-child{border-top:1px solid var(--rule)}
+.L-typo .tnum{font:800 152px/1 Montserrat,Inter,sans-serif;letter-spacing:-.07em;
+  color:var(--name);opacity:.9;width:126px;flex:none;text-align:center}
+.L-typo .trow--champ .tnum{background:linear-gradient(140deg,var(--champ-from),var(--champ-to));
+  -webkit-background-clip:text;background-clip:text;color:transparent;opacity:1}
+.L-typo .tbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.L-typo .pname{font-size:38px;font-weight:700}
+.L-typo .trow--champ .pname{font-weight:800}
+.L-typo .pk{width:44px;height:44px}
+.L-typo .team{gap:4px}
+.L-typo .rec{font-size:30px}
+
+/* ═══ 16 filmstrip ════════════════════════════════════════════════════ */
+.L-strip .strip{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;min-height:0}
+.L-strip .lane{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px 10px;
+  background:var(--node);border:1px solid var(--rule);border-radius:14px}
+.L-strip .lane--champ{background:linear-gradient(180deg,var(--champ-from),var(--champ-to));
+  border-color:transparent}
+.L-strip .lane--champ .pname,.L-strip .lane--champ .rec{color:var(--on-champ)}
+.L-strip .lane--champ .place{color:rgb(26 26 26/.72)}
+.L-strip .lane .place{margin:0}
+.L-strip .lane .place b{font-size:38px}
+.L-strip .lane .place sup{font-size:16px}
+.L-strip .pname{font-size:19px;text-align:center;white-space:normal;line-height:1.2}
+.L-strip .team--col{gap:7px;margin-top:4px}
+.L-strip .pk{width:60px;height:60px}
+.L-strip .stats{align-items:center;margin-top:auto}
+.L-strip .rec{font-size:23px}

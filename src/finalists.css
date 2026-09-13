@@ -1,0 +1,94 @@
+/* Section chrome + the palette overrides that need more than a colour value.
+   Loaded AFTER colorvariants.css, whose layout rules are reused unchanged. */
+
+.sect{max-width:1780px;margin:0 auto;padding:26px 40px 0}
+.sect h2{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;
+  font:800 24px/1.2 Montserrat,Inter,sans-serif;letter-spacing:-.015em;
+  border-top:1px solid #262626;padding-top:26px}
+.sect__n{font:800 15px/1 Inter;color:var(--advance);letter-spacing:.1em}
+.sect__blurb{flex:0 0 100%;font:500 14px/1.5 Inter;color:var(--meta);letter-spacing:0}
+.sect .grid{padding-top:22px;padding-bottom:14px}
+.page code{font:600 13px/1 ui-monospace,monospace;color:var(--advance)}
+
+.demo__scope{font:700 10px/1 Inter;letter-spacing:.11em;text-transform:uppercase;
+  padding:5px 8px;border-radius:5px;color:#1a1a1a}
+.demo__scope--original{background:#cfc4ba}
+.demo__scope--warm{background:#ffb072}
+.demo__scope--outside{background:#7fd4d4}
+
+/* ── Warm light ──────────────────────────────────────────────────────
+   The family's light surfaces (TeamSheet / map light mode). Everything the
+   dark card assumes about text colour has to flip; the coloured band fills
+   themselves are unchanged, since they already carry measured ink. */
+.is-light .card,.card.is-light{background:#fff1df}
+.card.is-light::before{display:none}
+.card.is-light .title{color:#2c211b}
+.card.is-light .sub{color:#75665b}
+.card.is-light .cut{color:#a85526}
+.card.is-light .foot{border-top-color:#d9bfa4}
+.card.is-light .mark{color:#2c211b}
+.card.is-light .mark span{color:#a85526}
+.card.is-light .disclaim{color:#75665b}
+.card.is-light .pk--empty{background:#a08b74;opacity:.7}
+
+/* Slot plates default to a dark gradient fill — give them a paper surface so
+   the light page reads as intentional rather than as a hole. */
+.card.is-light.C-sl-medal .blk{background:linear-gradient(100deg,#fdf7ef,#f7e9d7)}
+.card.is-light.C-sl-medal .nm{color:#5b4a3c}
+.card.is-light.C-sl-medal .rc{color:#75665b}
+.card.is-light.C-sl-typegrad .nm,.card.is-light.C-sl-typegrad .rc{color:rgb(44 33 27/.82)}
+
+/* The reverse shear alternates solid / outlined; the outlined half needs a
+   paper fill here rather than near-black. */
+.card.is-light.C-sh-reverse .blk:nth-child(even){background:#fdf7ef;border-color:var(--med)}
+.card.is-light.C-sh-reverse .blk:nth-child(even) .pl{color:#a85526}
+.card.is-light.C-sh-reverse .blk:nth-child(even) .nm{color:#2c211b}
+.card.is-light.C-sh-reverse .blk:nth-child(even) .rc{color:#75665b}
+.card.is-light.C-sh-reverse .blk:nth-child(even) .rule{background:#d9bfa4}
+
+/* ── Monochrome ──────────────────────────────────────────────────────
+   Greyscale means the type-gradient layout has no hue to run between, so the
+   gradient becomes a value ramp and the plate keeps its clipped silhouette. */
+.P-mono.C-sl-typegrad .blk{background:linear-gradient(102deg,var(--ta),var(--tb))}
+.P-mono .nm{letter-spacing:.16em}
+
+/* ── Warm depth ──────────────────────────────────────────────────────
+   Rank reads by lightness, so the outlined states need their stroke lifted to
+   stay visible on the darker two steps. */
+.P-warmdepth.C-sl-medal .pl{-webkit-text-stroke-width:3px}
+.P-warmdepth.C-sh-reverse .blk:nth-child(even){border-width:3px}
+
+/* ── Cool neon ───────────────────────────────────────────────────────
+   Give the saturated fills the same glow the neon variants used, so the
+   palette reads as deliberate rather than as a recolour. */
+.P-cool.C-sl-medal .blk{box-shadow:inset 0 0 0 2px var(--med),0 0 26px -10px var(--med)}
+.P-cool.C-sh-medal .blk{box-shadow:0 0 30px -12px var(--med)}
+
+/* ── Contrast repairs ────────────────────────────────────────────────
+   These layouts draw the palette colour as ink or as a stroke ON the dark
+   plate, which is fine for a light palette and invisible for a dark one.
+   --med-lift is the same hue raised until it clears 4.5:1 on that surface. */
+.C-sl-medal .nm{color:var(--med-lift)}
+.C-sl-medal .pl{-webkit-text-stroke-color:var(--med-lift)}
+.C-sh-reverse .blk:nth-child(even){border-color:var(--med-lift)}
+.C-sh-reverse .blk:nth-child(even) .pl{color:var(--med-lift)}
+
+/* The gradient layout hardcoded dark ink, which only held because the sampled
+   types happened to be light. Drive it from the measured value instead. */
+.C-sl-typegrad .pl{color:var(--med-ink)}
+.C-sl-typegrad .nm{color:var(--med-ink)}
+.C-sl-typegrad .rc{color:var(--med-ink);opacity:.8}
+
+/* A VALUE ramp cannot survive as an accent on a dark plate — lifting it to
+   readable would flatten the ramp and lose the ranking. Fill the plate with
+   it instead, so lightness still carries rank. */
+.P-warmdepth.C-sl-medal .blk{background:linear-gradient(100deg,var(--ta),var(--tb));
+  box-shadow:inset 0 0 0 2px rgb(255 255 255/.13)}
+.P-warmdepth.C-sl-medal .pl{color:var(--med-ink);-webkit-text-stroke:0}
+.P-warmdepth.C-sl-medal .nm,.P-warmdepth.C-sl-medal .rc{color:var(--med-ink)}
+.P-warmdepth.C-sh-reverse .blk:nth-child(even){background:var(--med);
+  border-color:rgb(255 255 255/.13)}
+.P-warmdepth.C-sh-reverse .blk:nth-child(even) .pl,
+.P-warmdepth.C-sh-reverse .blk:nth-child(even) .nm{color:var(--med-ink)}
+.P-warmdepth.C-sh-reverse .blk:nth-child(even) .rc{color:var(--med-ink);opacity:.78}
+.P-warmdepth.C-sh-reverse .blk:nth-child(even) .rule{background:var(--med-ink);opacity:.3}
