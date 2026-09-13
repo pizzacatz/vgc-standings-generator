@@ -55,16 +55,17 @@ function dataUri(url) {
 
 async function envFor(data, cut) {
   const slugs = [...new Set(data.standings.slice(0, cut).flatMap(p => p.team).filter(s => roster[s]))];
-  const [fontUris, fillerUri, spriteUris] = await Promise.all([
+  const [fontUris, fillerUri, logoUri, spriteUris] = await Promise.all([
     Promise.all(fonts.map(f => dataUri(f.file))),
     dataUri("sprites/_filler.png"),
+    dataUri("brand/gpe-logo.png"),
     Promise.all(slugs.map(s => dataUri(`sprites/${s}.png`))),
   ]);
   const sprites = Object.fromEntries(slugs.map((s, i) => [s, spriteUris[i]]));
   return {
     roster, css: cardCss, measure,
     fonts: fonts.map((f, i) => ({ ...f, url: fontUris[i] })),
-    sprite: s => sprites[s], filler: fillerUri,
+    sprite: s => sprites[s], filler: fillerUri, logo: logoUri,
   };
 }
 

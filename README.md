@@ -42,12 +42,13 @@ Pushing a change under `web/` to `main` deploys it via
 | `web/app.js`, `app.css`, `index.html` | The form, preview and toolbar |
 | `web/data/roster.json` | Names, typing and Mega Stones per legal slug |
 | `web/sprites/`, `web/fonts/` | Menu icons and the card's typefaces |
+| `web/brand/gpe-logo.png` | Corner logo, from `GeorgiaPlayEventsAssets/logo.png` |
 
-`web/data`, `web/sprites` and `web/fonts` are generated — rerun when the
-regulation changes:
+`web/data`, `web/sprites`, `web/fonts` and `web/brand` are generated — rerun
+when the regulation (or the logo) changes:
 
 ```
-python3 scripts/build-web-assets.py    # needs the champions_logic repo
+python3 scripts/build-web-assets.py    # needs champions_logic + GeorgiaPlayEventsAssets
 ```
 
 ## Command line
@@ -70,7 +71,9 @@ The settled design from the layout exploration: variant 04 of
 `out/layouts-brandtype.html`, **taller, semi-transparent bar**. Sheared bands
 open at a hard-stop brand tone and run into each team's dominant type; the bar
 is 72% black so the gradient reads through behind the stats. Footerless, with
-no disclaimer — by decision.
+no disclaimer — by decision. The Georgia Play Events logo sits small (38×48px)
+in the bottom-right corner, in the triangle the shear leaves beside the last
+band; it clears the stack's right edge at every preset.
 
 | Preset | Canvas | Places 1–4 | Places 5+ |
 |---|---|---|---|
@@ -211,4 +214,5 @@ box-downsamples 2× → 1×. Supersampling is what keeps 32px names crisp at 400
   does not say so; deliberate.
 
 Settled: the sprites may be posted publicly, and the cards carry no disclaimer
-or wordmark (a deliberate departure from BRACKET-GRAPHIC-GUIDE §4).
+(a deliberate departure from BRACKET-GRAPHIC-GUIDE §4); the logo is a small
+corner mark rather than a footer.

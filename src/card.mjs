@@ -40,6 +40,7 @@ const env = {
     .map(f => ({ ...f, url: dataUri(f.file, "font/woff2") })),
   sprite: s => dataUri(`sprites/${s}.png`, "image/png"),
   filler: dataUri("sprites/_filler.png", "image/png"),
+  logo: dataUri("brand/gpe-logo.png", "image/png"),
 };
 
 /* Reads back a JSON value a page wrote to a data- attribute on <body>. */

@@ -17,6 +17,9 @@
  * engine, so the caller supplies env.measure (the DOM in the browser, headless
  * Chrome from Node) and the fitted sizes are baked into the markup.
  *
+ * The Georgia Play Events logo sits small in the bottom-right corner, in the
+ * triangle the sheared stack leaves beside its last band.
+ *
  * Every selector in card.css is scoped under .card and every geometry value
  * is set on .card itself, so the same markup renders in a document, an
  * iframe, or an SVG <foreignObject> (which is how the browser exports PNGs).
@@ -91,6 +94,11 @@ const ROW_STATS_W = Math.round(R.rec * 2.9); // holds "12-10"
 const TAB_PAD = 16, TAB_GAP = 14, STATS_GAP = 3;
 
 const PL_W = 60;                       // shared place column; holds "16th"
+
+/* Corner logo. Its left edge clears the stack's right edge (PAD + INSET from
+   the card edge) even before the shear pulls the last band's bottom corner
+   further left, so it never touches a band at any preset. */
+const BRAND_H = 48, BRAND_W = 38, BRAND_R = 14, BRAND_B = 12;
 const CUT_FS = 26, HEAD_GAP = 20;
 
 /* Type specs, shared by the CSS (via custom properties) and the measurer. */
@@ -154,7 +162,7 @@ function fit(measure, text, spec, max, width) {
  * data   — event JSON (same shape as data/*.json)
  * preset — a key of PRESETS
  * env    — { roster, css, fonts: [{family, weight, url}], sprite: slug => url, filler: url,
- *            measure: (text, spec, px) => width in px }
+ *            logo: url (optional), measure: (text, spec, px) => width in px }
  *
  * `spec` is { family, weight, ls (em), upper, tabular }; `text` arrives
  * already uppercased where the CSS transforms it.
@@ -238,6 +246,7 @@ export function buildCard(data, preset, env) {
     "r-h": g.rowH, "r-vpad": ROW_VPAD, "r-strip": g.rowStrip, "r-icon": g.rowIcon, "r-icon-gap": ROW_ICON_GAP,
     "r-pl": R.pl, "r-rec": R.rec, "r-cp": R.cp, "r-stats-w": rowStatsW,
     "tab-pad": TAB_PAD, "tab-gap": TAB_GAP,
+    "brand-h": BRAND_H, "brand-w": BRAND_W, "brand-r": BRAND_R, "brand-b": BRAND_B,
   };
   const cardVars = Object.entries(vars).map(([k, v]) => `--${k}:${v}px`).join(";") + `;--shear:${SHEAR}deg`;
 
@@ -247,13 +256,15 @@ export function buildCard(data, preset, env) {
       `font-weight:${f.weight};font-display:block;src:url(${f.url}) format('woff2')}`),
     ...slugs.map(s => `.card .s-${s}{background-image:url(${env.sprite(s)})}`),
     `.card .pk--empty{--mask:url(${env.filler})}`,
+    env.logo ? `.card .brand{background-image:url(${env.logo})}` : "",
     env.css,
   ].join("\n");
 
   const markup = `<div class="card" style="${cardVars}">` +
     `<header class="head"><div class="head__row"><h1 class="title">${esc(data.event)}</h1>` +
     `<span class="cut">${cutLabel}</span></div><p class="sub">${meta}</p></header>` +
-    `<main class="stack">${blocks}</main></div>`;
+    `<main class="stack">${blocks}</main>` +
+    (env.logo ? `<i class="brand" role="img" aria-label="Georgia Play Events"></i>` : "") + `</div>`;
 
   return { w: c.w, h: c.h, g, style, markup };
 }

@@ -3,10 +3,12 @@
 
     python3 scripts/build-web-assets.py [path/to/champions_logic]
 
-Rerun when the regulation changes. Writes:
+Rerun when the regulation changes. The Georgia Play Events logo comes from
+the GeorgiaPlayEventsAssets repo (GPE_ASSETS overrides its location). Writes:
   web/sprites/<slug>.png     menu icon per legal species and Mega
   web/sprites/_filler.png    Pikachu silhouette for unknown team slots
   web/fonts/*.woff2          the Latin faces the card uses
+  web/brand/gpe-logo.png     the logo, downscaled for the card's corner mark
   web/data/roster.json       names, typing and Mega Stones per slug
   web/data/fonts.json        the @font-face list for those files
 """
@@ -18,7 +20,11 @@ import shutil
 import sqlite3
 import sys
 
+from PIL import Image
+
 DEFAULT_REPO = "/home/nuc1/Documents/Coding Projects/champions_logic"
+GPE_ASSETS = os.environ.get("GPE_ASSETS", "/home/nuc1/Documents/Coding Projects/GeorgiaPlayEventsAssets")
+LOGO_H = 168                           # 3× the ~56px it is drawn at
 repo = sys.argv[1] if len(sys.argv) > 1 else os.environ.get("CHAMPIONS_LOGIC", DEFAULT_REPO)
 db = os.path.join(repo, "data", "champions_logic.db")
 if not os.path.exists(db):
@@ -26,7 +32,7 @@ if not os.path.exists(db):
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WEB = os.path.join(ROOT, "web")
-for d in ("sprites", "fonts", "data"):
+for d in ("sprites", "fonts", "data", "brand"):
     os.makedirs(os.path.join(WEB, d), exist_ok=True)
 
 con = sqlite3.connect(db)
@@ -80,7 +86,13 @@ for body in re.findall(r"/\*\s*latin\s*\*/\s*@font-face\s*\{([^}]*)\}", css):
 with open(os.path.join(WEB, "data", "fonts.json"), "w") as fh:
     json.dump(fonts, fh, indent=1)
 
+logo = Image.open(os.path.join(GPE_ASSETS, "logo.png")).convert("RGBA")
+logo = logo.crop(logo.getbbox())
+logo = logo.resize((round(logo.width * LOGO_H / logo.height), LOGO_H), Image.LANCZOS)
+logo.save(os.path.join(WEB, "brand", "gpe-logo.png"), optimize=True)
+
 print(f"regulation {regulation}: {len(roster)} species/Megas -> web/sprites, web/data/roster.json")
 print(f"  fonts: {len(fonts)} faces")
+print(f"  logo: {logo.width}x{logo.height} -> web/brand/gpe-logo.png")
 if skipped:
     print(f"  WARNING no menu sprite, left out: {', '.join(skipped)}")
