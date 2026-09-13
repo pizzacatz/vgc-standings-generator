@@ -53,10 +53,14 @@
   <section class="form" aria-label="Event details">
     <fieldset class="panel">
       <legend>Event</legend>
+      <label class="field field--listing">Paste event listing
+        <textarea id="listing" rows="4" spellcheck="false" placeholder="VGC Challenge @ Battle and Brew&#10;When: Sun, Sep 13, 2026, 12:00 PM – 4:00 PM ET&#10;Where: 5920 Roswell Rd A120, Sandy Springs, GA 30328&#10;Link: https://www.pokemon.com/…"></textarea>
+      </label>
+      <p class="listing-status" id="listing-status" aria-live="polite"></p>
       <div class="grid grid--event">
         <label class="field field--wide">Event name<input data-k="event" autocomplete="off"></label>
         <label class="field">Location<input data-k="location" autocomplete="off"></label>
-        <label class="field">Date<input data-k="date" autocomplete="off" placeholder="12 September 2026"></label>
+        <label class="field">Date<input type="date" data-k="date"></label>
         <label class="field">Players<input data-k="players" inputmode="numeric" autocomplete="off"></label>
         <label class="field">Division<input data-k="division" autocomplete="off" placeholder="Masters"></label>
         <label class="field">Format<input data-k="format" autocomplete="off"></label>

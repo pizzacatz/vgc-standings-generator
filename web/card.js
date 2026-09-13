@@ -137,6 +137,48 @@ export function geometry(c) {
   };
 }
 
+/* ── Dates ───────────────────────────────────────────────────────────── */
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+  "August", "September", "October", "November", "December"];
+const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/* Event dates are stored as ISO (2026-09-13) and always drawn the same way,
+   "13 September 2026". Anything else — hand-written JSON from before dates
+   were normalised — is drawn as written. */
+export function formatDate(value) {
+  const m = ISO_DATE.exec(String(value ?? "").trim());
+  if (!m) return value;
+  return `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
+}
+
+/* Free text → ISO date, or null. Accepts ISO, "Sun, Sep 13, 2026",
+   "13 September 2026", "September 13 2026" and US numeric "9/13/2026". */
+export function parseDate(text) {
+  const t = String(text ?? "").trim();
+  const iso = /\b(\d{4})-(\d{1,2})-(\d{1,2})\b/.exec(t);
+  const us = /\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/.exec(t);
+  let y, mo, d;
+  if (iso) [y, mo, d] = [iso[1], iso[2], iso[3]].map(Number);
+  else if (us) [mo, d, y] = [us[1], us[2], us[3]].map(Number);
+  else {
+    const month = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?/i.exec(t);
+    const year = /\b(\d{4})\b/.exec(t);
+    if (!month || !year) return null;
+    /* The day is the 1–2 digit number nearest the month name. */
+    const days = [...t.matchAll(/\b(\d{1,2})(?:st|nd|rd|th)?\b/g)]
+      .filter(x => Number(x[1]) >= 1 && Number(x[1]) <= 31)
+      .sort((a, b) => Math.abs(a.index - month.index) - Math.abs(b.index - month.index));
+    if (!days.length) return null;
+    y = Number(year[1]);
+    mo = "janfebmaraprmayjunjulaugsepoctnovdec".indexOf(month[1].toLowerCase()) / 3 + 1;
+    d = Number(days[0][1]);
+  }
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+  return `${y}-${String(mo).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
 /* ── Markup ──────────────────────────────────────────────────────────── */
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c =>
@@ -229,7 +271,7 @@ export function buildCard(data, preset, env) {
   }).join("");
 
   const players = data.players ? `${data.players} ${data.division || ""}`.trim() : data.division;
-  const meta = [data.location, data.date, players, data.format]
+  const meta = [data.location, formatDate(data.date), players, data.format]
     .filter(Boolean).map(esc).join(" &nbsp;·&nbsp; ");
 
   const cutLabel = `Top ${c.cut}`;

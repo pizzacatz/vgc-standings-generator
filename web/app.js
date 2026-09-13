@@ -5,7 +5,7 @@
  * it, and export.js rasterises it to PNG. State lives in localStorage.
  */
 
-import { PRESETS, presetForCut, buildCard, cardDocument, domMeasurer, esc } from "./card.js";
+import { PRESETS, presetForCut, buildCard, cardDocument, domMeasurer, esc, parseDate } from "./card.js";
 import { cardToPng } from "./export.js";
 
 const STORE = "champions-standings:v1";
@@ -101,11 +101,60 @@ function parsePaste(text) {
   return team;
 }
 
+/* ── Event listing ───────────────────────────────────────────────────── */
+
+/* A Play! Pokémon / venue listing → event fields. The expected shape is
+
+     VGC Challenge @ BATTLE AND BREW
+     When: Sun, Sep 13, 2026, 12:00 PM – 4:00 PM ET
+     Where: 5920 ROSWELL RD A120, SANDY SPRINGS, GA 30328
+     Link: https://www.pokemon.com/…
+
+   with the labels in any order, on separate lines or run together. Nothing
+   is returned until at least one label is present, so a half-typed paste
+   doesn't overwrite the event name; after that, only fields actually found
+   are returned. The link isn't drawn on the card but is kept in the JSON. */
+const LABELS = /\b(When|Where|Link|Date|Location|Address)\s*:/gi;
+
+const titleCase = s => s.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase());
+
+/* A street address → "City, ST"; anything unrecognised is kept as written. */
+function cityState(where) {
+  const parts = where.split(",").map(p => p.trim()).filter(Boolean);
+  const i = parts.findIndex(p => /^[A-Z]{2}(\s+\d{5}(-\d{4})?)?$/i.test(p));
+  if (i > 0) return `${titleCase(parts[i - 1])}, ${parts[i].slice(0, 2).toUpperCase()}`;
+  return where;
+}
+
+function parseListing(text) {
+  const t = String(text || "").replace(/\r/g, "");
+  const found = {};
+  const marks = [...t.matchAll(LABELS)];
+  const value = (k, i) => t.slice(marks[i].index + marks[i][0].length, marks[i + 1]?.index ?? t.length).trim();
+  marks.forEach((m, i) => {
+    const k = m[1].toLowerCase();
+    const v = value(k, i).split("\n").map(x => x.trim()).filter(Boolean).join(" ");
+    if (!v) return;
+    if (k === "when" || k === "date") {
+      const d = parseDate(v);
+      if (d) found.date = d;
+    } else if (k === "where" || k === "location" || k === "address") {
+      found.location = cityState(v);
+    } else if (k === "link") {
+      found.link = v.split(/\s+/)[0];
+    }
+  });
+  if (!marks.length) return found;
+  const name = t.slice(0, marks[0].index).split("\n").map(x => x.trim()).find(Boolean);
+  if (name) found.event = name;
+  return found;
+}
+
 /* ── State ───────────────────────────────────────────────────────────── */
 
 const blankPlayer = () => ({ name: "", record: "", cp: "", team: ["", "", "", "", "", ""] });
 const blank = () => ({
-  event: "", location: "", date: "", players: "", division: "Masters",
+  event: "", location: "", date: "", link: "", players: "", division: "Masters",
   format: `Reg ${rosterFile.regulation}`, showCp: true, cut: 8,
   standings: Array.from({ length: MAX }, blankPlayer),
 });
@@ -120,6 +169,9 @@ function normalise(d) {
     return { name: String(p.name ?? ""), record: String(p.record ?? ""), cp: String(p.cp ?? ""), team };
   });
   out.showCp = d.showCp !== false;
+  /* Dates are ISO so the date picker can hold them; older saves and JSON
+     files wrote them out ("12 September 2026"). */
+  out.date = parseDate(d.date) || "";
   return out;
 }
 
@@ -205,6 +257,24 @@ document.addEventListener("change", e => {
   if (el.dataset.t && roster[state.standings[el.dataset.p].team[el.dataset.t]]) {
     el.value = display(state.standings[el.dataset.p].team[el.dataset.t]);
   }
+});
+
+const FIELD_NAMES = { event: "event name", date: "date", location: "location" };
+$("#listing").addEventListener("input", e => {
+  const found = parseListing(e.target.value);
+  const keys = Object.keys(FIELD_NAMES).filter(k => k in found);
+  if (!e.target.value.trim()) {
+    $("#listing-status").textContent = "";
+    return;
+  }
+  if (!keys.length) {
+    $("#listing-status").textContent = "Nothing recognised yet — expecting a name line, then When:, Where: and Link:.";
+    return;
+  }
+  Object.assign(state, found);
+  renderForm();
+  changed();
+  $("#listing-status").innerHTML = `Filled ${keys.map(k => `<b>${FIELD_NAMES[k]}</b>`).join(", ")}.`;
 });
 
 let pasteFor = null;

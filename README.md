@@ -12,6 +12,20 @@ A static, client-only page — no build step, no backend; nothing leaves the
 browser. Fill in the event, pick the cut, enter each player's record, points and
 team, and download the PNG.
 
+- **Paste event listing** — paste a listing like the one below and the event
+  name, date and location fill in as you paste. The address becomes
+  "City, ST"; the link isn't drawn but is kept in the exported JSON.
+
+  ```
+  VGC Challenge @ BATTLE AND BREW
+  When: Sun, Sep 13, 2026, 12:00 PM – 4:00 PM ET
+  Where: 5920 ROSWELL RD A120, SANDY SPRINGS, GA 30328
+  Link: https://www.pokemon.com/us/pokemon-trainer-club/play-pokemon-tournaments/26-09-004853/
+  ```
+- **Date** is a date picker. Dates are stored as ISO (`2026-09-13`) and always
+  drawn as "13 September 2026" (`formatDate` in `web/card.js`). Older saves and
+  JSON with a written-out date are converted on load; the CLI draws a non-ISO
+  date as written.
 - **Teams** — type species with autocomplete, or **Paste team** from a
   Showdown / PokePaste export. A species holding its own Mega Stone is shown
   as the Mega form, as on the rendered cards.
